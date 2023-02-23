@@ -6,12 +6,25 @@
         <h1 class="mt-5">Welcome to my movie World</h1>
         <p class="lead">Will you find what you are looking for...?</p>
     </div>
+    <div class="col-lg-12 mb-4">
+        {% for listType in availableLists %}
+        {% if listType == selected_list %}
+        <a href="{{ url_for('homepage',list_type=listType) }}" class="btn btn-info">{{listType|replace('_','
+            ')|title}}</a>
+        {% else %}
+        <a href="{{ url_for('homepage',list_type=listType) }}" class="btn btn-outline-info">{{listType|replace('_','
+            ')|title}}</a>
+        {% endif %}
+        {% endfor %}
+
+    </div>
+
     {% for data in dataBase %}
 
 
     <div class="col-lg-3 col-md-6 mb-4">
         <div class="card h-100">
-            <img class="card-img-top" src={{data.url_poster}} alt="">
+            <img class="card-img-top" src="{{ tmdb_image_url(data.poster_path,'w342') }}" alt="">
             <div class="card-body">
                 <h4 class="card-title">{{data.title}}</h4>
             </div>

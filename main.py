@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, make_response, jsonify, abort
 import tmdb_client
 import configparser
 import os
@@ -21,8 +21,19 @@ app = Flask(__name__)
 
 @app.route('/')
 def homepage():
-    dataBase = tmdb_client.get_movie_info(8)
-    return render_template("homepage.html", dataBase=dataBase)
+    availableLists = ['now_playing',
+                      'popular', 'top_rated', 'upcoming', 'latest']
+    selected_list = request.args.get('list_type', 'popular')
+    try:
+        dataBase = tmdb_client.get_movie_database(8, selected_list)
+
+    except:
+        selected_list = 'popular'
+        dataBase = tmdb_client.get_movie_database(8, selected_list)
+
+    random.shuffle(dataBase)
+
+    return render_template("homepage.html", dataBase=dataBase, availableLists=availableLists, selected_list=selected_list)
 
 
 @app.route("/movie/<movieId>")
