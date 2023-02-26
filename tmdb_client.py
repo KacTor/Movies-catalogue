@@ -2,7 +2,8 @@ import requests
 from main import get_permission_api
 
 
-api_token = get_permission_api('config.ini')
+api_token = get_permission_api('config.ini', 'apiKey')
+api_token2 = get_permission_api('config.ini', 'apiKey2')
 
 
 def get_movies(listType='popular'):
@@ -59,3 +60,22 @@ def get_movie_list(movieId):
     }
     response = requests.get(endpoint, headers=headers)
     return response.json()['results']
+
+
+def search(searchQuery):
+    baseUrl = 'https://api.themoviedb.org/3'
+    endpoint = f'{baseUrl}/search/movie?api_key={api_token2}&query={searchQuery}'
+    response = requests.get(endpoint)
+
+    return response.json()['results']
+
+
+def get_series_today(howMany):
+    baseUrl = 'https://api.themoviedb.org/3'
+    endpoint = f'{baseUrl}/tv/airing_today'
+    headers = {
+        "Authorization": f"Bearer {api_token}"
+    }
+    response = requests.get(endpoint, headers=headers)
+    response.raise_for_status()
+    return response.json()['results'][:howMany]

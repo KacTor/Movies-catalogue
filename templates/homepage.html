@@ -1,22 +1,28 @@
 {% extends "index.html" %}
-
 {% block content %}
+
 <div class="row">
     <div class="col-lg-12 text-center">
         <h1 class="mt-5">Welcome to my movie World</h1>
         <p class="lead">Will you find what you are looking for...?</p>
     </div>
+
     <div class="col-lg-12 mb-4">
+
         {% for listType in availableLists %}
+
         {% if listType == selected_list %}
-        <a href="{{ url_for('homepage',list_type=listType) }}" class="btn btn-info">{{listType|replace('_','
-            ')|title}}</a>
+        <a href="{{ url_for('homepage',list_type=listType) }}" class="btn btn-info">
+            {{listType|replace('_','
+            ')|title}}
+        </a>
         {% else %}
-        <a href="{{ url_for('homepage',list_type=listType) }}" class="btn btn-outline-info">{{listType|replace('_','
-            ')|title}}</a>
+        <a href="{{ url_for('homepage',list_type=listType) }}" class="btn btn-outline-info">
+            {{listType|replace('_','')|title}}</a>
         {% endif %}
         {% endfor %}
-
+        <a href="{{ url_for('today_series') }}" class="btn btn-outline-info">
+            Today series ({{today}})</a>
     </div>
 
     {% for data in dataBase %}
