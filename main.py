@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 import tmdb_client
 import configparser
 import os
 import random
 from datetime import date
-from pprint import pprint
 
 
 def get_permission_api(fileName: str, variable: str):
@@ -21,6 +20,9 @@ def get_permission_api(fileName: str, variable: str):
 app = Flask(__name__)
 
 
+FAVORITES = set()
+
+
 @app.route('/')
 def homepage():
     today = date.today().strftime("%d.%m.%Y")
@@ -29,7 +31,6 @@ def homepage():
     selected_list = request.args.get('list_type', 'popular')
     try:
         dataBase = tmdb_client.get_movie_database(8, selected_list)
-        pprint(dataBase)
 
     except:
         selected_list = 'popular'
@@ -52,7 +53,6 @@ def movie_details(movieId):
 def search():
     searchQuery = request.args.get('q', '')
     searchMovie = tmdb_client.search(searchQuery)[:8]
-    print(searchMovie)
 
     return render_template('search.html', searchMovie=searchMovie)
 
@@ -61,9 +61,28 @@ def search():
 def today_series():
     today = date.today().strftime("%d.%m.%Y")
     dataBase = tmdb_client.get_series_today(8)
-    pprint(dataBase)
 
     return render_template('today.html', dataBase=dataBase, today=today)
+
+
+@app.route("/favorites/add", methods=['POST'])
+def add_favorite():
+    movieId = request.form.get('movieId')
+    tmdb_client.save_fav_in_file(movieId)
+
+    return redirect(url_for('homepage'))
+
+
+@app.route("/favorites/list")
+def show_favorite():
+    dataBase = []
+
+    with open("favlist.txt", "r", encoding="UTF-8") as file:
+        for id in file:
+            details = tmdb_client.get_single_movie(id)
+            dataBase.append(details)
+
+    return render_template('fav.html', dataBase=dataBase)
 
 
 @app.context_processor

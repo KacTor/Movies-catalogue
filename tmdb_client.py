@@ -79,3 +79,17 @@ def get_series_today(howMany):
     response = requests.get(endpoint, headers=headers)
     response.raise_for_status()
     return response.json()['results'][:howMany]
+
+
+def save_fav_in_file(movieId):
+    with open("favlist.txt", "r+", encoding="UTF-8") as file:
+        flag = True
+
+        for line in file.readlines():            
+            if movieId == line.replace('\n', ''):
+                flag = False                
+
+        if flag:
+            file.write(movieId + '\n')
+        else:
+            flag = True
