@@ -91,5 +91,4 @@ def save_fav_in_file(movieId):
 
         if flag:
             file.write(movieId + '\n')
-        else:
-            flag = True
+    return flag

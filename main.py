@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, flash
 import tmdb_client
 import configparser
 import os
@@ -18,6 +18,8 @@ def get_permission_api(fileName: str, variable: str):
 
 
 app = Flask(__name__)
+
+app.secret_key = b'h5tfr6g'
 
 
 FAVORITES = set()
@@ -68,7 +70,13 @@ def today_series():
 @app.route("/favorites/add", methods=['POST'])
 def add_favorite():
     movieId = request.form.get('movieId')
-    tmdb_client.save_fav_in_file(movieId)
+    flag = tmdb_client.save_fav_in_file(movieId)
+    title = tmdb_client.get_single_movie(movieId)['title']
+
+    if flag:
+        flash(f'{title} was successfully add.')
+    else:
+        flash(f'{title} is already in favorite.')
 
     return redirect(url_for('homepage'))
 
@@ -78,9 +86,10 @@ def show_favorite():
     dataBase = []
 
     with open("favlist.txt", "r", encoding="UTF-8") as file:
-        for id in file:
-            details = tmdb_client.get_single_movie(id)
-            dataBase.append(details)
+        idList = file.read().splitlines()
+
+    for id in idList:
+        dataBase.append(tmdb_client.get_single_movie(id))
 
     return render_template('fav.html', dataBase=dataBase)
 
