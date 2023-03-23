@@ -1,13 +1,12 @@
 import requests
 import os
 
-
-api_token = os.environ.get("TMDB_API_TOKEN", "")
-api_token2 = os.environ.get("TMDB_API_TOKEN2", "")
+api_token = os.environ.get("TMDB_API_TOKEN","not exist")
+api_token2 = os.environ.get("TMDB_API_TOKEN2 ", "")
 
 
 def call_tmdb_api(endpoint):
-   full_url = f"https://api.themoviedb.org/3/{endpoint}"
+   full_url = f"https://api.themoviedb.org/3/{endpoint}"   
    headers = {
        "Authorization": f"Bearer {api_token}"
    }
