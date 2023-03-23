@@ -1,20 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, flash
 import tmdb_client
-import configparser
-import os
 import random
 from datetime import date
-
-
-def get_permission_api(fileName: str, variable: str):
-    config = configparser.ConfigParser()
-    config.read(
-        os.path.join(os.path.dirname(
-            os.path.abspath(__file__)), fileName))
-
-    APIKEY = config['DEFAULT'][variable]
-
-    return APIKEY
 
 
 app = Flask(__name__)
@@ -32,7 +19,7 @@ def homepage():
                       'top_rated', 'upcoming', 'latest']
     selected_list = request.args.get('list_type', 'popular')
     try:
-        dataBase = tmdb_client.get_movie_database(8, selected_list)
+        dataBase = tmdb_client.get_movie_database(8, selected_list)        
 
     except:
         selected_list = 'popular'

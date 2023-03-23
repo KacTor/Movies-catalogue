@@ -1,10 +1,9 @@
 import requests
-from main import get_permission_api
+import os
 
 
-
-api_token = get_permission_api('config.ini', 'apiKey')
-api_token2 = get_permission_api('config.ini', 'apiKey2')
+api_token = os.environ.get("TMDB_API_TOKEN", "")
+api_token2 = os.environ.get("TMDB_API_TOKEN2", "")
 
 
 def call_tmdb_api(endpoint):
@@ -13,7 +12,8 @@ def call_tmdb_api(endpoint):
        "Authorization": f"Bearer {api_token}"
    }
    response = requests.get(full_url, headers=headers)
-   response.raise_for_status()   
+   response.raise_for_status()
+   
    return response.json()
 
 def get_movies(listType='popular'):
