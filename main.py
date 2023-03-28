@@ -18,6 +18,8 @@ def homepage():
     availableLists = ['popular', 'now_playing',
                       'top_rated', 'upcoming', 'latest']
     selected_list = request.args.get('list_type', 'popular')
+    
+    
     try:
         dataBase = tmdb_client.get_movie_database(8, selected_list)        
 

@@ -1,7 +1,7 @@
 import tmdb_client
 from unittest.mock import Mock
 from main import app
-
+import pytest
 
 def test_get_poster_url_uses_default_size():
    # Przygotowanie danych
@@ -50,18 +50,13 @@ def test_get_single_movie_cast():
 
 
 
-'''@pytest.mark.parametrize('n', (
-('popular'),
-('now_playing'),
-('top_rated'),
-('upcoming'),
-('latest')))
-
-def test_homepage(monkeypatch):
+@pytest.mark.parametrize('n', (('popular'),('now_playing'),('lateddst')))
+def test_homepage(monkeypatch,n):
+   print(n)
    api_mock = Mock(return_value={'results': []})
    monkeypatch.setattr("tmdb_client.call_tmdb_api", api_mock)
 
    with app.test_client() as client:
-      response = client.get('/')
+      response = client.get(f'/?list_type={n}')
       assert response.status_code == 200 
-      api_mock.assert_called_once_with(listType='popular')'''
+      api_mock.assert_called_once_with(f'movie/{n}')
